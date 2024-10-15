@@ -287,4 +287,4 @@ const ProtectorRegister = () => {
   );
 }
 
-export default ProtectorRegister
+export default ProtectorRegister;
