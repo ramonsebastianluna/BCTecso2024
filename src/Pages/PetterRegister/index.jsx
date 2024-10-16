@@ -238,7 +238,7 @@ function PetterRegister() {
                 <Button
                   variant="primary"
                   type="submit"
-                  className="btn-register"
+                  className="btn-register btn-large"
                   disabled={isSubmitting}
                 >
                   Registrarme
