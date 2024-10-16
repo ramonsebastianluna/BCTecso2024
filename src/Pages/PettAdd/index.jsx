@@ -1,10 +1,13 @@
 
 import { Formik } from "formik";
 import * as Yup from "yup";
-import { Form, Button, Container} from "react-bootstrap";
+import { Form, Button, Container, Alert} from "react-bootstrap";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import { useRef, useState } from "react";
+import {  useNavigate } from "react-router-dom";
+import { useState,  useRef} from "react";
+// import { Cloudinary } from '@cloudinary/url-gen';
+
+
 import "./pett-add.scss"
 import MapIcon from "../../assets/map-pin.png";
 import SelectIcon from "../../assets/flecha.png"
@@ -29,34 +32,67 @@ const validationSchema = Yup.object().shape({
 });
 
 const PettAdd = () => {
-
   const navigate = useNavigate();
+  const [imagenes, setImagenes] = useState([]); 
+  const [subiendo, setSubiendo] = useState(false);
+  const [errorImagenes, setErrorImagenes] = useState("");
   const form = useRef();
-  const [imagen, setImagen] = useState(null);
 
   const handleImageChange = (e) => {
-    setImagen(e.target.files[0]);
-  };
+    const files = Array.from(e.target.files);
 
-
-  const handleSubmit = async (values) => {
-    const formData = new FormData();
-    Object.entries(values).forEach(([key, value]) => formData.append(key, value));
-    if (imagen) formData.append("imagen", imagen);
-
-    try {
-      const response = await axios.post(
-        "http://localhost:8081/api/Mascotas/registro",
-
-        formData,
-        { headers: { "Content-Type": "multipart/form-data" } }
-      );
-      console.log("Animal agregado:", response.data);
-      navigate("/"); 
-    } catch (error) {
-      console.error("Error al agregar animal:", error);
+    if (files.length + imagenes.length > 10) {
+      setErrorImagenes("No puedes subir más de 10 imágenes.");
+      return;
     }
-  };
+
+    setImagenes((prev) => [...prev, ...files]);
+    setErrorImagenes(""); 
+  }; 
+
+  const uploadImagesToCloudinary = async () => {
+        const formDataArray = imagenes.map((imagen) => {
+        const formData = new FormData();
+        formData.append("file", imagen);
+        formData.append("upload_preset", "djn5lvybe"); 
+        return formData;
+      });
+  
+      try {
+        const responses = await Promise.all(
+          formDataArray.map((formData) =>
+            axios.post("https://api.cloudinary.com/v1_1/djn5lvybe/image/upload", formData)
+          )
+        );
+        return responses.map((response) => response.data.secure_url);
+      } catch (error) {
+        console.error("Error al subir imágenes:", error);
+        throw error;
+      }
+    };
+  
+    const handleSubmit = async (values) => {
+      setSubiendo(true);
+  
+      try {
+        const imageUrls = await uploadImagesToCloudinary(); 
+  
+        const data = {
+          ...values,
+          fotos: imageUrls, 
+        };
+  
+        await axios.post("http://localhost:8081/api/Mascotas/registro", data);
+        console.log("Animal agregado exitosamente");
+        navigate("/");
+      } catch (error) {
+        console.error("Error al agregar animal:", error);
+      } finally {
+        setSubiendo(false);
+      }
+    };
+
+  
 
   return (
     <Container className="container-pet">
@@ -74,7 +110,7 @@ const PettAdd = () => {
           ciudad: "",
           mesAnioNacimiento: "",
           protectora:"",
-          "fotos": []
+          fotos: [],
         }}
 
         validationSchema={validationSchema}
@@ -128,14 +164,14 @@ const PettAdd = () => {
               </Form.Control.Feedback>
             </Form.Group>
 
-            <Form.Group className="mb-3 position-relative" controlId="tipo">
+            <Form.Group className="mb-3 position-relative" controlId="tipoAnimal">
               <Form.Control  className="form-pet"
                 as="select"
-                name="tipo"
-                value={values.tipo}
+                name="tipoAnimal"
+                value={values.tipoAnimal}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                isInvalid={!!errors.tipo && touched.tipo}
+                isInvalid={!!errors.tipoAnimal && touched.tipoAnimal}
               >
                 <option value="">Tipo*</option>
                 <option value="Perro">Perro</option>
@@ -221,20 +257,20 @@ const PettAdd = () => {
 
            
 
-            <Form.Group className="mb-3 position-relative" controlId="ubicacion">
+            <Form.Group className="mb-3 position-relative" controlId="ciudad">
                 <img src={MapIcon} alt="Map" className="input-icon" />
                 <Form.Control
                     className="form-pet with-icon"
                     type="text"
-                    name="ubicacion"
+                    name="ciudad"
                     placeholder="Ubicación*"
-                    value={values.ubicacion}
+                    value={values.ciudad}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    isInvalid={!!errors.ubicacion && touched.ubicacion}
+                    isInvalid={!!errors.ciudad && touched.ciudad}
                 />
                 <Form.Control.Feedback type="invalid">
-                    {errors.ubicacion}
+                    {errors.ciudad}
                 </Form.Control.Feedback>
             </Form.Group>
 
@@ -272,7 +308,7 @@ const PettAdd = () => {
               <Form.Check  
                 type="radio"
                 label="Macho"
-                name="genero"
+                name="sexo"
                 value="Macho"
                 onChange={handleChange}
                 checked={values.sexo === "Macho"}
@@ -280,20 +316,21 @@ const PettAdd = () => {
               <Form.Check 
                 type="radio"
                 label="Hembra"
-                name="genero"
+                name="sexo"
                 value="Hembra"
                 onChange={handleChange}
                 checked={values.sexo === "Hembra"}
               />
             </Form.Group>
 
-            <Form.Group className="mb-3" controlId="imagen">
-              <Form.Label>Cargar imagen</Form.Label>
-              <Form.Control type="file" onChange={handleImageChange} />
+            <Form.Group className="mb-3" controlId="imagenes">
+              <Form.Label>Cargar imágenes (máximo 10)</Form.Label>
+              <Form.Control type="file" multiple onChange={handleImageChange} />
+              {errorImagenes && <Alert variant="danger">{errorImagenes}</Alert>}
             </Form.Group>
 
-            <Button className="btn-sm" variant="primary" type="submit" disabled={isSubmitting}>
-              Agregar Animal
+            <Button variant="primary" type="submit" disabled={isSubmitting || subiendo}>
+              {subiendo ? "Subiendo imágenes..." : "Agregar Animal"}
             </Button>
           </Form>
         )}
@@ -301,5 +338,6 @@ const PettAdd = () => {
     </Container>
   );
 }
+
 
 export default PettAdd;
