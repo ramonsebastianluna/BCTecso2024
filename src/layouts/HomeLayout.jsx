@@ -1,5 +1,8 @@
 import { Container, Col, Form, Row, Button, Offcanvas } from "react-bootstrap";
 import { useState } from "react";
+import { useDispatch } from 'react-redux';
+import { useNavigate } from "react-router-dom";
+import { logout } from '../auth/authSlice';
 import profile from "../assets/home-layout/profile.png";
 import menu from "../assets/home-layout/menu.png";
 import search from "../assets/home-layout/search.png";
@@ -14,9 +17,10 @@ import Slider from "react-slick";
 
 const HomeLayout = ({children}) => {
   const [show, setShow] = useState(false);
-
+  const Navigate = useNavigate();
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+  const dispatch = useDispatch();
 
   var settings = {
     dots: false,
@@ -42,6 +46,11 @@ const HomeLayout = ({children}) => {
     ]
   };
 
+  const handleLogOut = () => {
+    dispatch(logout());
+    Navigate('/');
+  };
+
   return (
     <>
       <div className="container p-3 layout-container">
@@ -59,6 +68,9 @@ const HomeLayout = ({children}) => {
           </Offcanvas.Header>
           <Offcanvas.Body>
             <p>Desarrollado por Hilda y Seba</p>
+            <Button onClick={handleLogOut} variant="primary">
+              Logout
+            </Button>
           </Offcanvas.Body>
         </Offcanvas>
 
@@ -110,10 +122,9 @@ const HomeLayout = ({children}) => {
             </Slider>
           </div>
         </div>
-
-        <div className="mt-3">
-          {children}
-        </div>
+      </div>
+      <div>
+        {children}
       </div>
     </>
   )

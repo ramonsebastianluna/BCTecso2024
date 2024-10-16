@@ -1,17 +1,13 @@
 import { useEffect } from "react";
-import { Button, Card, Container } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from 'react-redux';
-import { logout } from '../../auth/authSlice';
+import { Container } from "react-bootstrap";
+import { useNavigate, Link } from "react-router-dom";
+import { useSelector } from 'react-redux';
+import addIcon from "../../assets/add-button.png";
+import "./home.scss";
 
 const Home = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const { token } = useSelector((state) => state.login);
-
-  const handleLogOut = () => {
-    dispatch(logout());  
-  };
+  const { token, role } = useSelector((state) => state.login);
 
   useEffect(() => {
     if (!token) {
@@ -20,22 +16,14 @@ const Home = () => {
   }, [token, navigate]);
 
   return (
-    <Container
-      fluid className="d-flex justify-content-center align-items-center"
-    >
-      <Card bg="dark" text="white" className="p-4" style={{ width: "22rem" }}>
-        <Card.Body>
-          <Card.Title className="text-center">Bienvenido al Home</Card.Title>
-          <Card.Text className="text-center">
-            Click para cerrar sesión:
-          </Card.Text>
-          <div className="d-flex justify-content-center">
-            <Button onClick={handleLogOut} variant="primary">
-              Logout
-            </Button>
-          </div>
-        </Card.Body>
-      </Card>
+    <Container fluid className="home-container d-flex align-items-center justify-content-center position-relative">
+      <p className="text-center">No hay animales registrados <br /> actualmente</p>
+
+      { role === "Protectora" && (
+        <Link to="/register/pett-add" className="position-absolute bottom-0 end-0 mb-4 me-2">
+          <img src={addIcon} alt="add-pet" />
+        </Link>
+      )}
     </Container>
   );
 };
