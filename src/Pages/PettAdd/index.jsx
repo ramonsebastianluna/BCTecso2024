@@ -329,7 +329,7 @@ const PettAdd = () => {
               {errorImagenes && <Alert variant="danger">{errorImagenes}</Alert>}
             </Form.Group>
 
-            <Button variant="primary" type="submit" disabled={isSubmitting || subiendo}>
+            <Button className="btn-large" variant="primary" type="submit" disabled={isSubmitting || subiendo}>
               {subiendo ? "Subiendo imágenes..." : "Agregar Animal"}
             </Button>
           </Form>
