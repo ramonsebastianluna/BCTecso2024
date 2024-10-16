@@ -21,11 +21,40 @@ const useRegisterProtector = () => {
   };
 
   const registerProtector = async (dataUser, form) => {
+    const dataFormated = {
+      email: dataUser.email,
+      password: dataUser.password,
+      nombreUsuario: "Juan",
+      apellidoUsuario: "Perez",
+      nombreProtectora: dataUser.nameProtector,
+      descripcion: dataUser.description,
+      sitioWeb: dataUser.webSite,
+      instagram: dataUser.instagram,
+      facebook: dataUser.facebook,
+      cantidadDeMascotas: 20,
+      direccion: {
+        idCiudad: dataUser.city,
+        calle: dataUser.street,
+        numero: dataUser.number,
+        piso: dataUser.floor,
+        departamento: dataUser.apartment,
+        provincia: {
+          id: 0,
+          nombre: "string"
+        },
+        ciudad: {
+          id: 0,
+          nombre: "string",
+          idProvincia: 0
+        }
+      }
+    }
+    
     try {
-      const response = await axios.post("http://localhost:8081/api/Protectoras/registro", dataUser);
+      const response = await axios.post("http://localhost:8081/api/Protectoras/registro", dataFormated);
       console.log("Response:", response);
 
-      // Llamar a sendEmail y esperar su respuesta
+      //Llamar a sendEmail y esperar su respuesta
       const emailStatus = await sendEmail(form);
 
       if (emailStatus === "SUCCESS") {
@@ -36,12 +65,13 @@ const useRegisterProtector = () => {
     } catch (error) {
       console.log('El error es: ' + error);
     
-      if (error.request && error.request.response) {
+      if (error) {
         try {
-          const response = JSON.parse(error.request.response);
-          console.log('La respuesta es: ' + response);
+          //const response = JSON.parse(error);
+          //console.log("Error:", error.response.data.errors);
+          console.log('La respuesta es: ' + error.response.data.errors);
     
-          if (response.errors && response.errors.includes("Ya existe un usuario registrado con esa dirección de email")) {
+          if (error.response.data.errors && error.response.data.errors.includes("Ya existe un usuario registrado con esa dirección de email")) {
             navigate("/register/refused");
           } else {
             console.error("Error:", response.errors);

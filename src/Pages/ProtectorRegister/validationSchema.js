@@ -25,8 +25,7 @@ const validationSchema = Yup.object().shape({
       .required("La confirmación de contraseña es requerida"),
 
     city: Yup.string()
-      .required("La ciudad es obligatoria")
-      .min(2, "Debe tener al menos 2 caracteres"),
+      .required("La ciudad es obligatoria"),
   
     street: Yup.string()
       .notRequired()

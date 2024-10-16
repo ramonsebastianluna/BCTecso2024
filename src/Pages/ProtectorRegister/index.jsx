@@ -1,14 +1,29 @@
 import { Formik } from "formik";
 import { Form, Button, Container } from "react-bootstrap";
-import { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import validationSchema from "./validationSchema";
 import useRegisterProtector from "../../hooks/useRegisterProtector";
+import axios from "axios";
 
 const ProtectorRegister = () => {
 
   const form = useRef();
   const { registerProtector } = useRegisterProtector();
+  const [cities, setCities] = useState([]);
 
+  const getCities = async () => {
+    try {
+      const response = await axios.get("http://localhost:8081/api/Combos/Ciudades/1");
+      setCities(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  useEffect(() => {
+    getCities();
+  }, []);
+  
   const intialState = {
     nameProtector: "",
     description: "",
@@ -148,18 +163,24 @@ const ProtectorRegister = () => {
               </Form.Group>
 
               <Form.Group controlId="formBasicCity">
-                <Form.Control
-                  type="text"
+                <Form.Select
                   name="city"
-                  placeholder="Ciudad*"
-                  value={values.city}
+                  aria-label="City select"
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  value={values.city}
                   isInvalid={!!errors.city && touched.city}
-                />
-                <Form.Control.Feedback type="invalid">
-                  {errors.city}
-                </Form.Control.Feedback>
+                >
+                  <option value="" disabled>Ciudad*</option>
+                  {cities.map((city) => (
+                    <option key={city.id} value={city.id}>{city.nombre}</option>
+                  ))}
+                </Form.Select>
+                {errors.city && touched.city && (
+                  <Form.Control.Feedback type="invalid">
+                    {errors.city}
+                  </Form.Control.Feedback>
+                )}
               </Form.Group>
 
               <Form.Group controlId="formBasicLastStreet">
