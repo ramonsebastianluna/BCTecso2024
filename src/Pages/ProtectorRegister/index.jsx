@@ -5,11 +5,27 @@ import validationSchema from "./validationSchema";
 import useRegisterProtector from "../../hooks/useRegisterProtector";
 import axios from "axios";
 
+import logo from "../../assets/login.png";
+import eye from "../../assets/eye.png";
+import hidden from "../../assets/Vector.png"
+import "./protector-register.scss";
+
 const ProtectorRegister = () => {
 
   const form = useRef();
   const { registerProtector } = useRegisterProtector();
   const [cities, setCities] = useState([]);
+
+  const [passwordVisible, setPasswordVisible] = useState(false);
+  const [confPasswordVisible, setConfPasswordVisible] = useState(false);
+  
+
+  const togglePasswordVisibility = () => {
+    setPasswordVisible(!passwordVisible);
+  };
+  const toggleConfPasswordVisibility = () => {
+    setConfPasswordVisible(!confPasswordVisible);
+  };
 
   const getCities = async () => {
     try {
@@ -60,15 +76,9 @@ const ProtectorRegister = () => {
   };
   
   return (
-    <div className="vh-100 justify-content-center align-items-center">
-      <Container
-        className="bg-dark text-white rounded-2 py-4 align-self-center"
-        style={{
-          maxWidth: "400px",
-          paddingTop: "50px",
-          boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-        }}
-      >
+    <div>
+      <Container className="container-register">
+        <img className="img-register" src={logo}/>
         <Formik
           initialValues={intialState}
           validationSchema={validationSchema}
@@ -87,8 +97,8 @@ const ProtectorRegister = () => {
             isSubmitting,
           }) => (
             <Form ref={form} onSubmit={formikHandleSubmit}>
-              <Form.Group controlId="formBasicNameProtector">
-                <Form.Control
+              <Form.Group controlId="formBasicNameProtector" className="mb-3">
+                <Form.Control className="form-register"
                   type="text"
                   name="nameProtector"
                   placeholder="Nombre Protectora*"
@@ -102,8 +112,8 @@ const ProtectorRegister = () => {
                 </Form.Control.Feedback>
               </Form.Group>
               
-              <Form.Group controlId="formBasicDescription">
-                <Form.Control
+              <Form.Group controlId="formBasicDescription" className="mb-3">
+                <Form.Control className="form-register" 
                   type="text"
                   name="description"
                   placeholder="Descripción*"
@@ -117,8 +127,8 @@ const ProtectorRegister = () => {
                 </Form.Control.Feedback>
               </Form.Group>
 
-              <Form.Group controlId="formBasicEmail">
-                <Form.Control
+              <Form.Group controlId="formBasicEmail" className="mb-3">
+                <Form.Control className="form-register"
                   type="email"
                   name="email"
                   placeholder="Email*"
@@ -132,8 +142,8 @@ const ProtectorRegister = () => {
                 </Form.Control.Feedback>
               </Form.Group>
 
-              <Form.Group controlId="formBasicPassword">
-                <Form.Control
+              <Form.Group controlId="formBasicPassword" className="mb-3">
+                <Form.Control className="form-register"
                   type="password"
                   name="password"
                   placeholder="Contraseña*"
@@ -142,13 +152,24 @@ const ProtectorRegister = () => {
                   onBlur={handleBlur}
                   isInvalid={!!errors.password && touched.password}
                 />
+                 <div className="container-pass">
+                    <span className="toggle-visibility" onClick={togglePasswordVisibility}>
+                                      {passwordVisible ? (
+                                        <img src={eye} alt="Ocultar contraseña" />
+                                      ) : (
+                                        <img src={hidden} alt="Mostrar contraseña" />
+                                      )}
+                                    
+                      </span>
+                </div>
+
                 <Form.Control.Feedback type="invalid">
                   {errors.password}
                 </Form.Control.Feedback>
               </Form.Group>
 
-              <Form.Group controlId="formBasicConfirmPassword">
-                <Form.Control
+              <Form.Group controlId="formBasicConfirmPassword" className="mb-3">
+                <Form.Control className="form-register"
                   type="password"
                   name="confirmPassword"
                   placeholder="Confirmar contraseña*"
@@ -157,13 +178,23 @@ const ProtectorRegister = () => {
                   onBlur={handleBlur}
                   isInvalid={!!errors.confirmPassword && touched.confirmPassword}
                 />
-                <Form.Control.Feedback type="invalid">
+                <div className="container-pass">
+                 <span className="toggle-visibility" onClick={toggleConfPasswordVisibility}>
+                                      {confPasswordVisible ? (
+                                        <img src={eye} alt="Ocultar contraseña" />
+                                      ) : (
+                                        <img src={hidden} alt="Mostrar contraseña" />
+                                      )}
+                                    
+                    </span>
+                <Form.Control.Feedback type="invalid"> 
                   {errors.confirmPassword}
                 </Form.Control.Feedback>
+              </div>
               </Form.Group>
 
-              <Form.Group controlId="formBasicCity">
-                <Form.Select
+              <Form.Group controlId="formBasicCity" className="mb-3">
+                <Form.Select className="form-register"
                   name="city"
                   aria-label="City select"
                   onChange={handleChange}
@@ -183,8 +214,8 @@ const ProtectorRegister = () => {
                 )}
               </Form.Group>
 
-              <Form.Group controlId="formBasicLastStreet">
-                <Form.Control
+              <Form.Group controlId="formBasicLastStreet" className="mb-3">
+                <Form.Control className="form-register"
                   type="text"
                   name="street"
                   placeholder="Calle"
@@ -198,9 +229,9 @@ const ProtectorRegister = () => {
                 </Form.Control.Feedback>
               </Form.Group>
 
-              <div className="d-flex">
-                <Form.Group controlId="formBasicLastNumber">
-                  <Form.Control
+              <div className="d-flex input-pair">
+                <Form.Group controlId="formBasicLastNumber" className="mb-3">
+                  <Form.Control className="form-register"
                     type="number"
                     name="number"
                     placeholder="Número"
@@ -214,8 +245,8 @@ const ProtectorRegister = () => {
                   </Form.Control.Feedback>
                 </Form.Group>
 
-                <Form.Group controlId="formBasicLastFloor">
-                  <Form.Control
+                <Form.Group controlId="formBasicLastFloor" className="mb-3">
+                  <Form.Control className="form-register"
                     type="text"
                     name="floor"
                     placeholder="Piso"
@@ -230,8 +261,8 @@ const ProtectorRegister = () => {
                 </Form.Group>
               </div>
               
-              <Form.Group controlId="formBasicLastApartment">
-                <Form.Control
+              <Form.Group controlId="formBasicLastApartment" className="mb-3">
+                <Form.Control className="form-register"
                   type="text"
                   name="apartment"
                   placeholder="Departamento"
@@ -245,8 +276,8 @@ const ProtectorRegister = () => {
                 </Form.Control.Feedback>
               </Form.Group>
 
-              <Form.Group controlId="formBasicLastWebSite">
-                <Form.Control
+              <Form.Group controlId="formBasicLastWebSite" className="mb-3">
+                <Form.Control className="form-register"
                   type="url"
                   name="webSite"
                   placeholder="Sitio Web"
@@ -260,8 +291,8 @@ const ProtectorRegister = () => {
                 </Form.Control.Feedback>
               </Form.Group>
 
-              <Form.Group controlId="formBasicLaInstagram">
-                <Form.Control
+              <Form.Group controlId="formBasicLaInstagram" className="mb-3">
+                <Form.Control className="form-register"
                   type="url"
                   name="instagram"
                   placeholder="Instagram"
@@ -275,8 +306,8 @@ const ProtectorRegister = () => {
                 </Form.Control.Feedback>
               </Form.Group>
 
-              <Form.Group controlId="formBasicLastFacebook">
-                <Form.Control
+              <Form.Group controlId="formBasicLastFacebook" className="mb-3">
+                <Form.Control className="form-register"
                   type="url"
                   name="facebook"
                   placeholder="Facebook"
@@ -294,7 +325,7 @@ const ProtectorRegister = () => {
                 <Button
                   variant="primary"
                   type="submit"
-                  className="mt-4 align-self-center"
+                  className="btn-register btn-large"
                   disabled={isSubmitting}
                 >
                   Registrarme
