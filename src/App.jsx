@@ -13,9 +13,6 @@ import RegisterRefused from './Pages/RegisterRefused';
 import HomeLayout from './layouts/HomeLayout';
 import UploadSuccessful from './Pages/UploadSuccessful';
 import PettAdd from "./Pages/PettAdd"
-import ProtectorCard from './Pages/ProtectorCard';
-
-import "./Pages/ProtectorCard/protector-card.scss"
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -44,7 +41,6 @@ function App() {
       <Route path="/register/success" element={<RegisterSuccess/>} />
       <Route path="/register/pet/upload-successful" element={<UploadSuccessful/>} />
       <Route path="/register/pett-add" element={<PettAdd/>} />
-      <Route path="/protector/card" element={<ProtectorCard/>}/>
     </Routes>
   );
 }
