@@ -1,0 +1,37 @@
+@use "../../sass/utils/variables" as var; 
+
+.container-card {
+   width: 18rem;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+ 
+}
+
+.title-card{
+    font-family: "Montserrat Regular";
+    color: var.$text-slider !important;
+}
+.no-border{
+    border: none !important;
+   
+    
+}
+
+// .item-custom{
+//     color: beige !important;
+//     background-color: #0199A3 !important;
+//     border-radius: 45%;
+//     width: 50px;
+//     height: 20px;
+   
+// }
+
+.position-button{
+    top:10px;
+    right: 10px; 
+    border: none; 
+    font-Size: 1.2rem;
+    padding: 0;
+    position: absolute;
+
+}
