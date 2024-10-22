@@ -12,7 +12,7 @@ const PetCard = ({img, name, city, sex}) => {
         <Card.Text>
           <div className="d-flex align-items-center">
             <img src={pinMap} style={{width: '18px', height: '18px'}}  alt="city" />
-            <p class="my-0 mx-2">{city}</p>
+            <p className="my-0 mx-2">{city}</p>
           </div>
         </Card.Text>
       </Card.Body>
