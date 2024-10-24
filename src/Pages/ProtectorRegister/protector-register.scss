@@ -48,17 +48,10 @@
     }
 }
 
-
-.container-pass {
-   display: relative; 
-   
-}
   
   .toggle-visibility {
-    position: absolute;
-    right: 0;
-    top: 60%;
-    transform: translateY(-50%);
+    right: 8px !important;
+    top: 25px !important;
     cursor: pointer;
   }
   
