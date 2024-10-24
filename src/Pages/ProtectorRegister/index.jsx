@@ -141,8 +141,8 @@ const ProtectorRegister = () => {
                   {errors.email}
                 </Form.Control.Feedback>
               </Form.Group>
-
-              <Form.Group controlId="formBasicPassword" className="mb-3">
+              
+              <Form.Group controlId="formBasicPassword" className="mb-3 position-relative">
                 <Form.Control className="form-register"
                   type="password"
                   name="password"
@@ -152,23 +152,20 @@ const ProtectorRegister = () => {
                   onBlur={handleBlur}
                   isInvalid={!!errors.password && touched.password}
                 />
-                 <div className="container-pass">
-                    <span className="toggle-visibility" onClick={togglePasswordVisibility}>
-                                      {passwordVisible ? (
-                                        <img src={eye} alt="Ocultar contraseña" />
-                                      ) : (
-                                        <img src={hidden} alt="Mostrar contraseña" />
-                                      )}
-                                    
-                      </span>
-                </div>
-
+                <span className="toggle-visibility position-absolute" onClick={togglePasswordVisibility}>
+                  {passwordVisible ? (
+                    <img src={eye} alt="Ocultar contraseña" />
+                    ) : (
+                      <img src={hidden} alt="Mostrar contraseña" />
+                    )
+                  }
+                </span>
                 <Form.Control.Feedback type="invalid">
                   {errors.password}
                 </Form.Control.Feedback>
               </Form.Group>
 
-              <Form.Group controlId="formBasicConfirmPassword" className="mb-3">
+              <Form.Group controlId="formBasicConfirmPassword" className="mb-3 position-relative">
                 <Form.Control className="form-register"
                   type="password"
                   name="confirmPassword"
@@ -178,19 +175,17 @@ const ProtectorRegister = () => {
                   onBlur={handleBlur}
                   isInvalid={!!errors.confirmPassword && touched.confirmPassword}
                 />
-                <div className="container-pass">
-                 <span className="toggle-visibility" onClick={toggleConfPasswordVisibility}>
-                                      {confPasswordVisible ? (
-                                        <img src={eye} alt="Ocultar contraseña" />
-                                      ) : (
-                                        <img src={hidden} alt="Mostrar contraseña" />
-                                      )}
-                                    
-                    </span>
+                <span className="toggle-visibility position-absolute" onClick={toggleConfPasswordVisibility}>
+                  {confPasswordVisible ? (
+                    <img src={eye} alt="Ocultar contraseña" />
+                    ) : (
+                      <img src={hidden} alt="Mostrar contraseña" />
+                    )
+                  }         
+                </span>
                 <Form.Control.Feedback type="invalid"> 
                   {errors.confirmPassword}
                 </Form.Control.Feedback>
-              </div>
               </Form.Group>
 
               <Form.Group controlId="formBasicCity" className="mb-3">
@@ -232,7 +227,7 @@ const ProtectorRegister = () => {
               <div className="d-flex input-pair">
                 <Form.Group controlId="formBasicLastNumber" className="mb-3">
                   <Form.Control className="form-register"
-                    type="number"
+                    type="text"
                     name="number"
                     placeholder="Número"
                     value={values.number}
